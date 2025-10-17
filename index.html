@@ -51,6 +51,13 @@
       transition: 0.3s;
     }
 
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
     button {
       background: linear-gradient(135deg, #4c8cff, #7a5cff);
       color: white;
@@ -60,7 +67,6 @@
       cursor: pointer;
       font-weight: 600;
       transition: 0.3s;
-      margin-top: 10px;
     }
 
     button:hover {
@@ -102,7 +108,6 @@
       background: linear-gradient(135deg, #00d4ff, #007bff);
     }
 
-    /* 🔹 User Guide Button */
     #guideBtn {
       position: absolute;
       top: 20px;
@@ -132,7 +137,11 @@
     <label>Enter digits (3–10):</label><br>
     <input type="text" id="digits" maxlength="10"><br>
     <label><input type="checkbox" id="allowRepeat"> Allow Repeats</label><br>
-    <button id="generate">Generate</button>
+
+    <div class="button-row">
+      <button id="generate">Generate</button>
+      <button id="clearBtn">Clear</button>
+    </div>
   </div>
 
   <div class="result-section">
@@ -144,6 +153,7 @@
 
   <script>
     const copyBtn = document.getElementById("copyBtn");
+    const clearBtn = document.getElementById("clearBtn");
 
     document.getElementById("generate").addEventListener("click", () => {
       const digits = document.getElementById("digits").value.trim();
@@ -160,6 +170,8 @@
       const result = generate3D(digits, allowRepeat);
       displayResults(result);
     });
+
+    clearBtn.addEventListener("click", clearAll);
 
     function generate3D(digits, allowRepeat) {
       const arr = digits.split('');
@@ -182,7 +194,6 @@
     }
 
     function displayResults({input, normalCount, normal}) {
-      // Triple Section
       const triples = [];
       for (let i = 0; i <= 9; i++) {
         const t = `${i}${i}${i}`;
@@ -229,6 +240,14 @@
         copyBtn.innerText = "✅ Copied!";
         setTimeout(() => copyBtn.innerText = "📋 Copy Results", 1500);
       });
+    }
+
+    function clearAll() {
+      document.getElementById("digits").value = "";
+      document.getElementById("allowRepeat").checked = false;
+      document.getElementById("summary").innerText = "";
+      document.getElementById("normalResult").innerText = "";
+      copyBtn.style.display = "none";
     }
   </script>
 </body>
