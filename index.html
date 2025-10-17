@@ -58,7 +58,6 @@
     <label>Enter digits (3–10)</label><br>
     <input type="text" id="digits" maxlength="12" placeholder="ရိုက်ထည့်ပါ"><br>
     <label><input type="checkbox" id="allowRepeat"> Allow Repeats</label><br>
-
     <div class="button-row">
       <button id="generate">Generate</button>
       <button id="clearBtn">Clear</button>
@@ -85,11 +84,20 @@
       if (digits === "ခွ") return displayKhweResults();
       if (digits === "အပူး") return displayApueResults();
 
-      const patMatch = digits.match(/^(\d+)ပတ်$/);
+      const patMatch = digits.match(/^([0-9]+)ပတ်$/);
       if (patMatch) return displayPatResults(patMatch[1]);
 
+      const teitMatch = digits.match(/^([0-9])ထိပ်$/);
+      if (teitMatch) return displayTeitResults(teitMatch[1], allowRepeat);
+
+      const lelMatch = digits.match(/^([0-9])လယ်$/);
+      if (lelMatch) return displayLelResults(lelMatch[1], allowRepeat);
+
+      const peitMatch = digits.match(/^([0-9])ပိတ်$/);
+      if (peitMatch) return displayPeitResults(peitMatch[1], allowRepeat);
+
       if (digits.length < 3 || digits.length > 10) {
-        alert("Please enter between 3 and 10 digits, or type 'ခွ' / 'အပူး' / '1ပတ်'.");
+        alert("Please enter between 3 and 10 digits, or type 'ခွ' / 'အပူး' / '1ပတ်' / '3ထိပ်' / '5လယ်' / '4ပိတ်'.");
         return;
       }
 
@@ -115,103 +123,110 @@
               if (i !== j && j !== k && i !== k)
                 normal.push(arr[i] + arr[j] + arr[k]);
       }
-
       return { input: digits, allowRepeat, normalCount: normal.length, normal };
     }
 
-    function displayResults({input, normalCount, normal}) {
-      const triples = [];
-      for (let i = 0; i <= 9; i++) {
-        const t = `${i}${i}${i}`;
-        if (normal.includes(t)) triples.push(t);
-      }
-      const filtered = normal.filter(n => !triples.includes(n));
-
-      let outputText = "";
-      if (triples.length > 0) {
-        outputText += "--- 💠 Triple Set ---\n" + triples.join(", ") + "\n\n";
-      }
-      outputText += "--- Rome 3D ---\n" + filtered.join(", ");
-
+    function displayResults({input, allowRepeat, normalCount, normal}) {
       document.getElementById("summary").innerText =
-        `Input: ${input}\nRome 3D: ${normalCount} sets`;
-      document.getElementById("normalResult").innerText = outputText;
-
-      copyBtn.style.display = "inline-block";
-      copyBtn.onclick = () => copyToClipboard(outputText);
-    }
-
-    function displayKhweResults() {
-      const khwe = [
-"101","202","303","404","505","606","707","808","909",
-"010","212","313","414","515","616","717","818","919",
-"020","121","323","424","525","626","727","828","929",
-"030","131","232","434","535","636","737","838","939",
-"040","141","242","343","545","646","747","848","949",
-"050","151","252","353","454","656","757","858","959",
-"060","161","262","363","464","565","767","868","969",
-"070","171","272","373","474","575","676","878","979",
-"080","181","282","383","484","585","686","787","989",
-"090","191","292","393","494","595","696","797","898"
-];
-      document.getElementById("summary").innerText =
-        `Mode: ခွ Mode 🌌\nTotal: ${khwe.length} sets`;
+        `Input: ${input}\nAllow Repeat: ${allowRepeat ? "Yes" : "No"}\nTotal: ${normalCount} sets`;
       document.getElementById("normalResult").innerText =
-        "--- ခွ Set ---\n" + khwe.join(", ");
+        "--- Rome 3D ---\n" + normal.join(", ");
       copyBtn.style.display = "inline-block";
-      copyBtn.onclick = () => copyToClipboard(khwe.join(", "));
+      copyBtn.onclick = () => copyToClipboard(normal.join(", "));
     }
 
-    function displayApueResults() {
-      const apue = [
-"001","002","003","004","005","006","007","008","009",
-"110","112","113","114","115","116","117","118","119",
-"220","221","223","224","225","226","227","228","229",
-"330","331","332","334","335","336","337","338","339",
-"440","441","442","443","445","446","447","448","449",
-"550","551","552","553","554","556","557","558","559",
-"660","661","662","663","664","665","667","668","669",
-"770","771","772","773","774","775","776","778","779",
-"880","881","882","883","884","885","886","887","889",
-"990","991","992","993","994","995","996","997","998",
-"011","022","033","044","055","066","077","088","099",
-"100","122","133","144","155","166","177","188","199",
-"200","211","233","244","255","266","277","288","299",
-"300","311","322","344","355","366","377","388","399",
-"400","411","422","433","455","466","477","488","499",
-"500","511","522","533","544","566","577","588","599",
-"600","611","622","633","644","655","677","688","699",
-"700","711","722","733","744","755","766","788","799",
-"800","811","822","833","844","855","866","877","899",
-"900","911","922","933","944","955","966","977","988"
-];
-      document.getElementById("summary").innerText =
-        `Mode: အပူး Mode 🌠\nTotal: ${apue.length} sets`;
-      document.getElementById("normalResult").innerText =
-        "--- အပူး Set ---\n" + apue.join(", ");
-      copyBtn.style.display = "inline-block";
-      copyBtn.onclick = () => copyToClipboard(apue.join(", "));
-    }
-
-    function displayPatResults(digitStr) {
-      const digitsToMatch = digitStr.split('');
+    // --- ထိပ် Mode ---
+    function displayTeitResults(d, allowRepeat) {
       const results = [];
-      for (let i = 0; i <= 9; i++) {
-        for (let j = 0; j <= 9; j++) {
-          for (let k = 0; k <= 9; k++) {
-            const s = `${i}${j}${k}`;
-            for (const d of digitsToMatch) {
-              if (s.includes(d)) { results.push(s); break; }
-            }
+      for (let j = 0; j <= 9; j++) {
+        for (let k = 0; k <= 9; k++) {
+          if (allowRepeat || (d !== j.toString() && j !== k && d !== k.toString())) {
+            results.push(`${d}${j}${k}`);
           }
         }
       }
-      const unique = Array.from(new Set(results));
-      unique.sort();
       document.getElementById("summary").innerText =
-        `Mode: ${digitStr}ပတ် Mode — contains [${digitsToMatch.join(', ')}]\nTotal: ${unique.length} sets`;
-      document.getElementById("normalResult").innerText =
-        `--- ${digitStr}ပတ် Set ---\n` + unique.join(", ");
+        `Mode: ${d}ထိပ်\nAllow Repeat: ${allowRepeat ? "Yes" : "No"}\nTotal: ${results.length}`;
+      document.getElementById("normalResult").innerText = results.join(", ");
+      copyBtn.style.display = "inline-block";
+      copyBtn.onclick = () => copyToClipboard(results.join(", "));
+    }
+
+    // --- လယ် Mode ---
+    function displayLelResults(d, allowRepeat) {
+      const results = [];
+      for (let i = 0; i <= 9; i++) {
+        for (let k = 0; k <= 9; k++) {
+          if (allowRepeat || (i !== k && i.toString() !== d && k.toString() !== d)) {
+            results.push(`${i}${d}${k}`);
+          }
+        }
+      }
+      document.getElementById("summary").innerText =
+        `Mode: ${d}လယ်\nAllow Repeat: ${allowRepeat ? "Yes" : "No"}\nTotal: ${results.length}`;
+      document.getElementById("normalResult").innerText = results.join(", ");
+      copyBtn.style.display = "inline-block";
+      copyBtn.onclick = () => copyToClipboard(results.join(", "));
+    }
+
+    // --- ပိတ် Mode ---
+    function displayPeitResults(d, allowRepeat) {
+      const results = [];
+      for (let i = 0; i <= 9; i++) {
+        for (let j = 0; j <= 9; j++) {
+          if (allowRepeat || (i !== j && i.toString() !== d && j.toString() !== d)) {
+            results.push(`${i}${j}${d}`);
+          }
+        }
+      }
+      document.getElementById("summary").innerText =
+        `Mode: ${d}ပိတ်\nAllow Repeat: ${allowRepeat ? "Yes" : "No"}\nTotal: ${results.length}`;
+      document.getElementById("normalResult").innerText = results.join(", ");
+      copyBtn.style.display = "inline-block";
+      copyBtn.onclick = () => copyToClipboard(results.join(", "));
+    }
+
+    // --- ခွ Mode (XYX) ---
+    function displayKhweResults() {
+      const results = [];
+      for (let x = 0; x <= 9; x++)
+        for (let y = 0; y <= 9; y++)
+          if (x !== y) results.push(`${x}${y}${x}`);
+      document.getElementById("summary").innerText = `Mode: ခွ (XYX)\nTotal: ${results.length}`;
+      document.getElementById("normalResult").innerText = results.join(", ");
+      copyBtn.style.display = "inline-block";
+      copyBtn.onclick = () => copyToClipboard(results.join(", "));
+    }
+
+    // --- အပူး Mode (XXY + XYY) ---
+    function displayApueResults() {
+      const results = [];
+      for (let x = 0; x <= 9; x++)
+        for (let y = 0; y <= 9; y++)
+          if (x !== y) {
+            results.push(`${x}${x}${y}`);
+            results.push(`${x}${y}${y}`);
+          }
+      document.getElementById("summary").innerText = `Mode: အပူး (XXY + XYY)\nTotal: ${results.length}`;
+      document.getElementById("normalResult").innerText = results.join(", ");
+      copyBtn.style.display = "inline-block";
+      copyBtn.onclick = () => copyToClipboard(results.join(", "));
+    }
+
+    // --- ပတ် Mode ---
+    function displayPatResults(digitStr) {
+      const digitsToMatch = digitStr.split('');
+      const results = [];
+      for (let i = 0; i <= 9; i++)
+        for (let j = 0; j <= 9; j++)
+          for (let k = 0; k <= 9; k++) {
+            const s = `${i}${j}${k}`;
+            if (digitsToMatch.some(d => s.includes(d))) results.push(s);
+          }
+      const unique = Array.from(new Set(results)).sort();
+      document.getElementById("summary").innerText =
+        `Mode: ${digitStr}ပတ်\nTotal: ${unique.length}`;
+      document.getElementById("normalResult").innerText = unique.join(", ");
       copyBtn.style.display = "inline-block";
       copyBtn.onclick = () => copyToClipboard(unique.join(", "));
     }
