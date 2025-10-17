@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌠 Developer Guide</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at 20% 20%, #0b0f25, #000);
+      color: #d6e0ff;
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    h1 {
+      font-size: 2em;
+      color: #89b4ff;
+      text-shadow: 0 0 12px #4c8cff;
+      margin-bottom: 10px;
+    }
+
+    .tip-box {
+      background: rgba(20, 25, 45, 0.85);
+      border: 1px solid rgba(100,150,255,0.3);
+      border-radius: 20px;
+      padding: 20px;
+      max-width: 700px;
+      margin: 20px auto;
+      box-shadow: 0 0 20px rgba(120,150,255,0.2);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .tip-box p {
+      line-height: 1.8;
+    }
+
+    .back-btn {
+      background: linear-gradient(135deg, #4c8cff, #00d4ff);
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 20px;
+    }
+
+    .back-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(100,200,255,0.5);
+    }
+  </style>
+</head>
+<body>
+  <h1>📘 Developer Guide</h1>
+
+  <div class="tip-box">
+    <p>🌌 <strong>Rome 3D Generator</strong> သည် 3 Digit Combination Generator တစ်ခုပဲဖြစ်ပါတယ်။</p>
+    <p>💡 <strong>အပူး</strong> = Fixed set များ<br>
+       💫 <strong>ခွ</strong> = Mirror-type combinations<br>
+       🔁 <strong>Allow Repeat</strong> = Triple များပါဝင်နိုင်</p>
+    <p>📊 “Triple Set” ဆိုတာအနေနဲ့ <strong>000 - 999</strong> ထဲက တူညီသည့်ဂဏန်းသုံးလုံးပါဝင်သူများကိုသီးသန့်ပြတယ်။</p>
+  </div>
+
+  <button class="back-btn" onclick="window.location.href='index.html'">⬅ Back to Generator</button>
+</body>
+</html>
