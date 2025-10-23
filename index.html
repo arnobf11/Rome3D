@@ -107,6 +107,7 @@
 
     clearBtn.addEventListener("click", clearAll);
 
+    // --- Generate 3D ---
     function generate3D(digits, allowRepeat) {
       const arr = digits.split('');
       let normal = [];
@@ -126,13 +127,22 @@
       return { input: digits, allowRepeat, normalCount: normal.length, normal };
     }
 
+    // --- Display Normal / Detect triple ---
     function displayResults({input, allowRepeat, normalCount, normal}) {
+      const triples = normal.filter(x => x[0] === x[1] && x[1] === x[2]);
+      const others = normal.filter(x => !(x[0] === x[1] && x[1] === x[2]));
+
+      let displayText = "--- Rome 3D ---\n";
+      if (triples.length > 0) {
+        displayText += `🔥 Triple (${triples.length}) → ${triples.join(", ")}\n\n`;
+      }
+      displayText += others.join(", ");
+
       document.getElementById("summary").innerText =
         `Input: ${input}\nAllow Repeat: ${allowRepeat ? "Yes" : "No"}\nTotal: ${normalCount} sets`;
-      document.getElementById("normalResult").innerText =
-        "--- Rome 3D ---\n" + normal.join(", ");
+      document.getElementById("normalResult").innerText = displayText;
       copyBtn.style.display = "inline-block";
-      copyBtn.onclick = () => copyToClipboard(normal.join(", "));
+      copyBtn.onclick = () => copyToClipboard(displayText);
     }
 
     // --- ထိပ် Mode ---
@@ -145,11 +155,7 @@
           }
         }
       }
-      document.getElementById("summary").innerText =
-        `Mode: ${d}ထိပ်\nAllow Repeat: ${allowRepeat ? "Yes" : "No"}\nTotal: ${results.length}`;
-      document.getElementById("normalResult").innerText = results.join(", ");
-      copyBtn.style.display = "inline-block";
-      copyBtn.onclick = () => copyToClipboard(results.join(", "));
+      showModeResults(`${d}ထိပ်`, results, allowRepeat);
     }
 
     // --- လယ် Mode ---
@@ -162,11 +168,7 @@
           }
         }
       }
-      document.getElementById("summary").innerText =
-        `Mode: ${d}လယ်\nAllow Repeat: ${allowRepeat ? "Yes" : "No"}\nTotal: ${results.length}`;
-      document.getElementById("normalResult").innerText = results.join(", ");
-      copyBtn.style.display = "inline-block";
-      copyBtn.onclick = () => copyToClipboard(results.join(", "));
+      showModeResults(`${d}လယ်`, results, allowRepeat);
     }
 
     // --- ပိတ် Mode ---
@@ -179,11 +181,7 @@
           }
         }
       }
-      document.getElementById("summary").innerText =
-        `Mode: ${d}ပိတ်\nAllow Repeat: ${allowRepeat ? "Yes" : "No"}\nTotal: ${results.length}`;
-      document.getElementById("normalResult").innerText = results.join(", ");
-      copyBtn.style.display = "inline-block";
-      copyBtn.onclick = () => copyToClipboard(results.join(", "));
+      showModeResults(`${d}ပိတ်`, results, allowRepeat);
     }
 
     // --- ခွ Mode (XYX) ---
@@ -198,19 +196,25 @@
       copyBtn.onclick = () => copyToClipboard(results.join(", "));
     }
 
-    // --- အပူး Mode (XXY + XYY) ---
+    // --- အပူး Mode (XXY + XYY) group separate ---
     function displayApueResults() {
-      const results = [];
+      const xxy = [];
+      const xyy = [];
       for (let x = 0; x <= 9; x++)
         for (let y = 0; y <= 9; y++)
           if (x !== y) {
-            results.push(`${x}${x}${y}`);
-            results.push(`${x}${y}${y}`);
+            xxy.push(`${x}${x}${y}`);
+            xyy.push(`${x}${y}${y}`);
           }
-      document.getElementById("summary").innerText = `Mode: အပူး (XXY + XYY)\nTotal: ${results.length}`;
-      document.getElementById("normalResult").innerText = results.join(", ");
+
+      const total = xxy.length + xyy.length;
+      let displayText =
+        `--- အပူး Mode ---\nTotal: ${total}\n\n🌟 XXY (${xxy.length}) → ${xxy.join(", ")}\n\n🌙 XYY (${xyy.length}) → ${xyy.join(", ")}`;
+
+      document.getElementById("summary").innerText = `Mode: အပူး (XXY + XYY)\nTotal: ${total}`;
+      document.getElementById("normalResult").innerText = displayText;
       copyBtn.style.display = "inline-block";
-      copyBtn.onclick = () => copyToClipboard(results.join(", "));
+      copyBtn.onclick = () => copyToClipboard(displayText);
     }
 
     // --- ပတ် Mode ---
@@ -224,11 +228,24 @@
             if (digitsToMatch.some(d => s.includes(d))) results.push(s);
           }
       const unique = Array.from(new Set(results)).sort();
-      document.getElementById("summary").innerText =
-        `Mode: ${digitStr}ပတ်\nTotal: ${unique.length}`;
-      document.getElementById("normalResult").innerText = unique.join(", ");
+      showModeResults(`${digitStr}ပတ်`, unique, true);
+    }
+
+    // Helper for displaying with triple check
+    function showModeResults(modeName, results, allowRepeat) {
+      const triples = results.filter(x => x[0] === x[1] && x[1] === x[2]);
+      const others = results.filter(x => !(x[0] === x[1] && x[1] === x[2]));
+
+      let displayText = `Mode: ${modeName}\nAllow Repeat: ${allowRepeat ? "Yes" : "No"}\nTotal: ${results.length}\n\n`;
+      if (triples.length > 0) {
+        displayText += `🔥 Triple (${triples.length}) → ${triples.join(", ")}\n\n`;
+      }
+      displayText += others.join(", ");
+
+      document.getElementById("summary").innerText = `Mode: ${modeName}\nAllow Repeat: ${allowRepeat ? "Yes" : "No"}\nTotal: ${results.length}`;
+      document.getElementById("normalResult").innerText = displayText;
       copyBtn.style.display = "inline-block";
-      copyBtn.onclick = () => copyToClipboard(unique.join(", "));
+      copyBtn.onclick = () => copyToClipboard(displayText);
     }
 
     function copyToClipboard(text) {
