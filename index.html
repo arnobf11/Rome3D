@@ -48,6 +48,28 @@
     #copyBtn { display:none; margin-top:10px; background: linear-gradient(135deg,#00d4ff,#007bff); }
     #guideBtn { position:absolute; top:20px; right:20px; background:linear-gradient(135deg,#4c8cff,#00d4ff); padding:10px 18px; border-radius:12px; border:none; font-weight:600; color:white; cursor:pointer; transition:0.3s; }
     #guideBtn:hover { transform: scale(1.05); box-shadow: 0 0 12px rgba(0,200,255,0.6); }
+    
+    /* 6 Columns Grid */
+    .numbers-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-top: 15px;
+    }
+    .number-item {
+      background: rgba(100,150,255,0.1);
+      border: 1px solid rgba(100,150,255,0.3);
+      border-radius: 6px;
+      padding: 8px;
+      text-align: center;
+      font-family: monospace;
+      font-size: 1.1em;
+    }
+    .triple-item {
+      background: rgba(255,100,100,0.2);
+      border-color: rgba(255,100,100,0.5);
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -74,6 +96,7 @@
   <script>
     const copyBtn = document.getElementById("copyBtn");
     const clearBtn = document.getElementById("clearBtn");
+    let currentNumbersForCopy = []; // Store numbers for copying
 
     document.getElementById("generate").addEventListener("click", () => {
       const digits = document.getElementById("digits").value.trim();
@@ -131,18 +154,28 @@
     function displayResults({input, allowRepeat, normalCount, normal}) {
       const triples = normal.filter(x => x[0] === x[1] && x[1] === x[2]);
       const others = normal.filter(x => !(x[0] === x[1] && x[1] === x[2]));
-
-      let displayText = "--- Rome 3D ---\n";
+      
+      currentNumbersForCopy = [...triples, ...others]; // Store for copying
+      
+      let displayHTML = "";
       if (triples.length > 0) {
-        displayText += `🔥 Triple (${triples.length}) → ${triples.join(", ")}\n\n`;
+        displayHTML += `<div style="margin-bottom:15px; color:#ff8888;">
+          <strong>🔥 Triple (${triples.length}):</strong>
+          <div class="numbers-grid">${triples.map(num => 
+            `<div class="number-item triple-item">${num}</div>`
+          ).join('')}</div>
+        </div>`;
       }
-      displayText += others.join(", ");
-
+      
+      displayHTML += `<div class="numbers-grid">${
+        others.map(num => `<div class="number-item">${num}</div>`).join('')
+      }</div>`;
+      
       document.getElementById("summary").innerText =
         `Input: ${input}\nAllow Repeat: ${allowRepeat ? "Yes" : "No"}\nTotal: ${normalCount} sets`;
-      document.getElementById("normalResult").innerText = displayText;
+      document.getElementById("normalResult").innerHTML = displayHTML;
       copyBtn.style.display = "inline-block";
-      copyBtn.onclick = () => copyToClipboard(displayText);
+      copyBtn.onclick = () => copyToClipboard(currentNumbersForCopy.join(", "));
     }
 
     // --- ထိပ် Mode ---
@@ -190,8 +223,14 @@
       for (let x = 0; x <= 9; x++)
         for (let y = 0; y <= 9; y++)
           if (x !== y) results.push(`${x}${y}${x}`);
+      
+      currentNumbersForCopy = results;
+      
       document.getElementById("summary").innerText = `Mode: ခွ (XYX)\nTotal: ${results.length}`;
-      document.getElementById("normalResult").innerText = results.join(", ");
+      document.getElementById("normalResult").innerHTML = 
+        `<div class="numbers-grid">${
+          results.map(num => `<div class="number-item">${num}</div>`).join('')
+        }</div>`;
       copyBtn.style.display = "inline-block";
       copyBtn.onclick = () => copyToClipboard(results.join(", "));
     }
@@ -208,13 +247,25 @@
           }
 
       const total = xxy.length + xyy.length;
-      let displayText =
-        `--- အပူး Mode ---\nTotal: ${total}\n\n🌟 XXY (${xxy.length}) → ${xxy.join(", ")}\n\n🌙 XYY (${xyy.length}) → ${xyy.join(", ")}`;
+      currentNumbersForCopy = [...xxy, ...xyy]; // Store for copying
+      
+      let displayHTML = `<div style="margin-bottom:20px; color:#88ff88;">
+          <strong>🌟 XXY (${xxy.length}):</strong>
+          <div class="numbers-grid">${xxy.map(num => 
+            `<div class="number-item">${num}</div>`
+          ).join('')}</div>
+        </div>
+        <div style="margin-bottom:20px; color:#8888ff;">
+          <strong>🌙 XYY (${xyy.length}):</strong>
+          <div class="numbers-grid">${xyy.map(num => 
+            `<div class="number-item">${num}</div>`
+          ).join('')}</div>
+        </div>`;
 
       document.getElementById("summary").innerText = `Mode: အပူး (XXY + XYY)\nTotal: ${total}`;
-      document.getElementById("normalResult").innerText = displayText;
+      document.getElementById("normalResult").innerHTML = displayHTML;
       copyBtn.style.display = "inline-block";
-      copyBtn.onclick = () => copyToClipboard(displayText);
+      copyBtn.onclick = () => copyToClipboard(currentNumbersForCopy.join(", "));
     }
 
     // --- ပတ် Mode ---
@@ -235,17 +286,27 @@
     function showModeResults(modeName, results, allowRepeat) {
       const triples = results.filter(x => x[0] === x[1] && x[1] === x[2]);
       const others = results.filter(x => !(x[0] === x[1] && x[1] === x[2]));
-
-      let displayText = `Mode: ${modeName}\nAllow Repeat: ${allowRepeat ? "Yes" : "No"}\nTotal: ${results.length}\n\n`;
+      
+      currentNumbersForCopy = [...triples, ...others]; // Store for copying
+      
+      let displayHTML = "";
       if (triples.length > 0) {
-        displayText += `🔥 Triple (${triples.length}) → ${triples.join(", ")}\n\n`;
+        displayHTML += `<div style="margin-bottom:15px; color:#ff8888;">
+          <strong>🔥 Triple (${triples.length}):</strong>
+          <div class="numbers-grid">${triples.map(num => 
+            `<div class="number-item triple-item">${num}</div>`
+          ).join('')}</div>
+        </div>`;
       }
-      displayText += others.join(", ");
-
+      
+      displayHTML += `<div class="numbers-grid">${
+        others.map(num => `<div class="number-item">${num}</div>`).join('')
+      }</div>`;
+      
       document.getElementById("summary").innerText = `Mode: ${modeName}\nAllow Repeat: ${allowRepeat ? "Yes" : "No"}\nTotal: ${results.length}`;
-      document.getElementById("normalResult").innerText = displayText;
+      document.getElementById("normalResult").innerHTML = displayHTML;
       copyBtn.style.display = "inline-block";
-      copyBtn.onclick = () => copyToClipboard(displayText);
+      copyBtn.onclick = () => copyToClipboard(currentNumbersForCopy.join(", "));
     }
 
     function copyToClipboard(text) {
@@ -259,8 +320,9 @@
       document.getElementById("digits").value = "";
       document.getElementById("allowRepeat").checked = false;
       document.getElementById("summary").innerText = "";
-      document.getElementById("normalResult").innerText = "";
+      document.getElementById("normalResult").innerHTML = "";
       copyBtn.style.display = "none";
+      currentNumbersForCopy = [];
     }
   </script>
 </body>
