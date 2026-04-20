@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>🌙 Dark Neon · 3D BK</title>
+  <!-- Font & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0f0f14;
+      background-image: radial-gradient(circle at 0% 0%, rgba(0, 180, 255, 0.08) 0%, transparent 35%),
+                        radial-gradient(circle at 100% 100%, rgba(157, 77, 255, 0.1) 0%, transparent 40%);
+      height: 100dvh;
+      max-height: 100dvh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 12px 0;
+      color: #e8ecff;
+    }
+
+    /* Main Container */
+    .app-container {
+      max-width: 520px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      gap: 8px;
+    }
+
+    /* --- Header --- */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 4px;
+    }
+
+    .title-block h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff, #b0d0ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+
+    .title-block .subhead {
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #7a8cb0;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .guide-chip {
+      background: rgba(25, 30, 50, 0.9);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 200, 255, 0.3);
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #b8d0ff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .guide-chip i {
+      color: #00d4ff;
+    }
+
+    /* --- Glass Card (Dark Glass) --- */
+    .glass-card {
+      background: rgba(20, 25, 40, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 180, 255, 0.2);
+      border-radius: 28px;
+      padding: 16px 18px;
+      box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.6);
+      flex-shrink: 0;
+    }
+
+    .input-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #9aafe0;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .input-field {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1.5px solid #2a3a60;
+      border-radius: 50px;
+      padding: 12px 18px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 2px;
+      outline: none;
+      transition: all 0.2s;
+      margin-bottom: 14px;
+    }
+
+    .input-field:focus {
+      border-color: #00d4ff;
+      background: #0a0e1a;
+      box-shadow: 0 0 18px rgba(0, 180, 255, 0.2);
+    }
+
+    .input-field::placeholder {
+      color: #5a6a8a;
+      font-size: 0.8rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Toggle */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      color: #c0d0ff;
+      cursor: pointer;
+    }
+
+    .toggle-label input[type="checkbox"] {
+      width: 40px;
+      height: 20px;
+      appearance: none;
+      background: #1f2a44;
+      border-radius: 40px;
+      position: relative;
+      border: 1px solid #3f5680;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .toggle-label input[type="checkbox"]:checked {
+      background: #9d4dff;
+      border-color: #b87aff;
+    }
+
+    .toggle-label input[type="checkbox"]::before {
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: #ffffff;
+      border-radius: 50%;
+      top: 1px;
+      left: 1px;
+      transition: 0.2s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .toggle-label input[type="checkbox"]:checked::before {
+      left: 21px;
+    }
+
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      background: #1a1f33;
+      border: 1px solid #3a4a70;
+      color: #e0e8ff;
+      padding: 12px 0;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-primary {
+      background: linear-gradient(145deg, #2a4aaa, #1a2d6e);
+      border-color: #00a6ff;
+      color: white;
+      font-weight: 700;
+    }
+
+    .btn-primary i {
+      color: #8ecaff;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #4a5a80;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: #00d4ff;
+    }
+
+    /* --- Results Area --- */
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px;
+    }
+
+    .results-header h3 {
+      font-weight: 700;
+      color: #c6d9ff;
+      font-size: 0.9rem;
+    }
+
+    #copyBtn {
+      background: rgba(30, 40, 70, 0.8);
+      border: 1px solid #3f5a90;
+      color: #b8d0ff;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      display: none;
+    }
+
+    #copyBtn:hover {
+      background: #1f3055;
+      border-color: #00a6ff;
+    }
+
+    #summary {
+      background: rgba(15, 25, 45, 0.7);
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #b8d0ff;
+      margin: 6px 0 10px;
+      border-left: 5px solid #00d4ff;
+      backdrop-filter: blur(4px);
+    }
+
+    #normalResult {
+      flex: 1;
+      overflow-y: auto;
+      min-height: 0;
+      padding-bottom: 8px;
+    }
+
+    .numbers-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .num-card {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(0, 180, 255, 0.25);
+      border-radius: 20px;
+      padding: 12px 2px;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #dce6ff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .triple-card {
+      background: rgba(180, 60, 120, 0.2);
+      border-color: #ff6b9d;
+      color: #ffc0d0;
+      box-shadow: 0 0 12px rgba(255, 80, 140, 0.2);
+    }
+
+    .badge-section {
+      background: rgba(60, 100, 200, 0.15);
+      border-radius: 30px;
+      padding: 6px 18px;
+      margin-bottom: 12px;
+      font-weight: 700;
+      color: #aad0ff;
+      display: inline-block;
+      border: 1px solid #3f6ab0;
+      font-size: 0.8rem;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.6rem;
+      padding: 8px 0 4px;
+      color: #6a7b9e;
+      font-weight: 600;
+      border-top: 1px dashed #2a3a60;
+      margin-top: 4px;
+    }
+
+    /* Scrollbar */
+    #normalResult::-webkit-scrollbar {
+      width: 3px;
+    }
+    #normalResult::-webkit-scrollbar-thumb {
+      background: #3f5a90;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  
+  <!-- Header -->
+  <div class="header">
+    <div class="title-block">
+      <h1>ROME 3D</h1>
+      <div class="subhead">Generator</div>
+    </div>
+    <div class="guide-chip" id="guideBtn">
+      <i class="fas fa-book-open"></i> GUIDE
+    </div>
+  </div>
+
+  <!-- Input Card -->
+  <div class="glass-card">
+    <label class="input-label"><i class="far fa-keyboard" style="margin-right: 6px;"></i>Command / Digits</label>
+    <input type="text" id="digits" class="input-field" placeholder="12345 / 0bk / ခွ / 6ပတ်" maxlength="14" autocomplete="off">
+    
+    <div class="toggle-row">
+      <label class="toggle-label">
+        <input type="checkbox" id="allowRepeat" checked> 
+        <span><i class="fas fa-redo-alt" style="margin-right: 6px;"></i>Allow Repeats</span>
+      </label>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-primary" id="generate"><i class="fas fa-bolt"></i> Generate</button>
+      <button class="btn btn-outline" id="clearBtn"><i class="fas fa-eraser"></i> Clear</button>
+    </div>
+  </div>
+
+  <!-- Results Header -->
+  <div class="results-header">
+    <h3><i class="fas fa-satellite" style="margin-right: 6px;"></i> Output</h3>
+    <button id="copyBtn"><i class="far fa-copy"></i> Copy</button>
+  </div>
+
+  <div id="summary">✨ ရလဒ်များ ဤနေရာတွင် ပြပါမည်</div>
+  
+  <!-- Scrollable Result Area -->
+  <div id="normalResult"></div>
+
+  <div class="footer-note">
+    <i class="far fa-moon"></i> @hein2425 Telegram
+  </div>
+</div>
+
+<script>
+  (function(){
+    "use strict";
+
+    const digitsInput = document.getElementById("digits");
+    const allowRepeatCheck = document.getElementById("allowRepeat");
+    const generateBtn = document.getElementById("generate");
+    const clearBtn = document.getElementById("clearBtn");
+    const summaryDiv = document.getElementById("summary");
+    const normalResultDiv = document.getElementById("normalResult");
+    const copyBtn = document.getElementById("copyBtn");
+    const guideBtn = document.getElementById("guideBtn");
+
+    let currentNumbersForCopy = [];
+
+    guideBtn.addEventListener("click", ()=>{
+      alert("🌙 DARK NEO GUIDE 🌙\n\n🔹 NORMAL: 3~10 digits (12345)\n🔹 BK: 0bk ~ 9bk\n🔹 ခွ = XYX\n🔹 အပူး = XXY+XYY\n🔹 FIXED: Xထိပ် / Xလယ် / Xပိတ်\n🔹 ပတ်: 24ပတ် (2 or 4)\n\n✅ Allow repeats works");
+    });
+
+    function renderNumberSet(numbersArray, modeTitle = "", extraInfo = "") {
+      if (!numbersArray || numbersArray.length === 0) {
+        normalResultDiv.innerHTML = `<div style="padding: 20px; text-align: center; color: #7a8cb0;">✨ ဂဏန်းများ မထွက်ပါ</div>`;
+        copyBtn.style.display = "none";
+        currentNumbersForCopy = [];
+        return;
+      }
+      
+      const triples = numbersArray.filter(num => num[0] === num[1] && num[1] === num[2]);
+      const others = numbersArray.filter(num => !(num[0] === num[1] && num[1] === num[2]));
+      currentNumbersForCopy = [...numbersArray];
+      
+      let html = "";
+      if (modeTitle) html += `<div class="badge-section"><i class="fas fa-crown" style="margin-right:6px;"></i>${modeTitle}</div>`;
+      if (extraInfo) html += `<div style="font-size:0.7rem; margin-bottom: 12px; color:#9aafe0;">${extraInfo}</div>`;
+      
+      if (triples.length) {
+        html += `<div style="margin-bottom: 16px;"><strong style="color:#ff7b9c;">🔥 TRIPLES (${triples.length})</strong><div class="numbers-grid">${triples.map(n => `<div class="num-card triple-card">${n}</div>`).join('')}</div></div>`;
+      }
+      if (others.length) {
+        html += `<div><strong style="color:#aad0ff;">✨ REGULAR (${others.length})</strong><div class="numbers-grid">${others.map(n => `<div class="num-card">${n}</div>`).join('')}</div></div>`;
+      }
+      
+      normalResultDiv.innerHTML = html;
+      copyBtn.style.display = "inline-block";
+      copyBtn.onclick = () => {
+        navigator.clipboard?.writeText(currentNumbersForCopy.join(", ")).then(()=>{
+          copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+          setTimeout(()=> copyBtn.innerHTML = '<i class="far fa-copy"></i> Copy', 1500);
+        }).catch(()=> alert("Manual copy"));
+      };
+    }
+
+    function getFullSetBK(bk) {
+      const res = [];
+      for(let i=0;i<=9;i++) for(let j=0;j<=9;j++) for(let k=0;k<=9;k++) if((i+j+k)%10===bk) res.push(`${i}${j}${k}`);
+      return res;
+    }
+
+    function handleGeneration() {
+      let raw = digitsInput.value.trim();
+      if (!raw) { alert("ဂဏန်း သို့ command ထည့်ပါ"); return; }
+      const allowRepeat = allowRepeatCheck.checked;
+      
+      const bkMatch = raw.match(/^(\d)bk$/i);
+      if (bkMatch) {
+        const bk = parseInt(bkMatch[1]);
+        const set = getFullSetBK(bk);
+        summaryDiv.innerText = `🎯 ${bk}bk · Sum%10=${bk} · ${set.length} numbers`;
+        renderNumberSet(set, `${bk}bk MASTER`, `(a+b+c)%10 = ${bk}`);
+        return;
+      }
+      if (raw === "ခွ") {
+        const arr = []; for(let x=0;x<=9;x++) for(let y=0;y<=9;y++) if(x!==y) arr.push(`${x}${y}${x}`);
+        summaryDiv.innerText = `🌀 ခွ · XYX pattern · ${arr.length} numbers`;
+        renderNumberSet(arr, "ခွ (XYX)");
+        return;
+      }
+      if (raw === "အပူး") {
+        const xxy=[], xyy=[];
+        for(let x=0;x<=9;x++) for(let y=0;y<=9;y++) if(x!==y){ xxy.push(`${x}${x}${y}`); xyy.push(`${x}${y}${y}`); }
+        const all = [...xxy, ...xyy];
+        let html = `<div class="badge-section">အပူး XXY + XYY</div>`;
+        html += `<div><strong>🌟 XXY (${xxy.length})</strong><div class="numbers-grid">${xxy.map(n=>`<div class="num-card">${n}</div>`).join('')}</div></div>`;
+        html += `<div style="margin-top:16px;"><strong>🌙 XYY (${xyy.length})</strong><div class="numbers-grid">${xyy.map(n=>`<div class="num-card">${n}</div>`).join('')}</div></div>`;
+        normalResultDiv.innerHTML = html;
+        summaryDiv.innerText = `အပူး · XXY + XYY · ${all.length} total`;
+        copyBtn.style.display='inline-block'; copyBtn.onclick=()=>navigator.clipboard?.writeText(all.join(', '));
+        currentNumbersForCopy = all;
+        return;
+      }
+      
+      const fixedPos = (d,pos)=> { let res=[]; for(let a=0;a<=9;a++) for(let b=0;b<=9;b++) { let dig; if(pos==='first') dig=[d,a,b]; else if(pos==='mid') dig=[a,d,b]; else dig=[a,b,d]; if(!allowRepeat && new Set(dig).size!==3) continue; res.push(dig.join('')); } return res; };
+      let match;
+      if((match=raw.match(/^([0-9])ထိပ်$/))) { const r=fixedPos(match[1],'first'); summaryDiv.innerText=`${match[1]}ထိပ် · ${r.length} nums`; renderNumberSet(r, `${match[1]}ထိပ်`); return; }
+      if((match=raw.match(/^([0-9])လယ်$/))) { const r=fixedPos(match[1],'mid'); summaryDiv.innerText=`${match[1]}လယ် · ${r.length} nums`; renderNumberSet(r, `${match[1]}လယ်`); return; }
+      if((match=raw.match(/^([0-9])ပိတ်$/))) { const r=fixedPos(match[1],'last'); summaryDiv.innerText=`${match[1]}ပိတ် · ${r.length} nums`; renderNumberSet(r, `${match[1]}ပိတ်`); return; }
+      if((match=raw.match(/^([0-9]+)ပတ်$/))) {
+        const digs = match[1].split(''); const res=[];
+        for(let i=0;i<=9;i++) for(let j=0;j<=9;j++) for(let k=0;k<=9;k++) { const s=`${i}${j}${k}`; if(digs.some(d=>s.includes(d))) res.push(s); }
+        summaryDiv.innerText = `${match[1]}ပတ် · contains [${digs}] · ${res.length}`;
+        renderNumberSet(res, `${match[1]}ပတ်`);
+        return;
+      }
+      
+      if (/^\d+$/.test(raw) && raw.length>=3 && raw.length<=10) {
+        const digits = raw.split(''); const nums=[];
+        if(allowRepeat) for(let a of digits) for(let b of digits) for(let c of digits) nums.push(a+b+c);
+        else for(let i=0;i<digits.length;i++) for(let j=0;j<digits.length;j++) { if(i===j)continue; for(let k=0;k<digits.length;k++) { if(k===i||k===j)continue; nums.push(digits[i]+digits[j]+digits[k]); } }
+        summaryDiv.innerText = `🔢 Normal [${raw}] · Repeat:${allowRepeat?'ON':'OFF'} · ${nums.length} combos`;
+        renderNumberSet(nums, `Digits {${digits.join(',')}}`);
+        return;
+      }
+      alert("❓ Format မှားနေပါတယ်။ Guide ကိုကြည့်ပါ။");
+    }
+
+    function clearAll() {
+      digitsInput.value = "";
+      allowRepeatCheck.checked = true;
+      summaryDiv.innerText = "✨ ရလဒ်များ ဤနေရာတွင် ပြပါမည်";
+      normalResultDiv.innerHTML = "";
+      copyBtn.style.display = "none";
+    }
+
+    generateBtn.addEventListener("click", handleGeneration);
+    clearBtn.addEventListener("click", clearAll);
+    digitsInput.addEventListener("keypress", (e) => { if(e.key==="Enter") handleGeneration(); });
+  })();
+</script>
+</body>
+</html>
